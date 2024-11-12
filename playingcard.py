@@ -7,7 +7,11 @@ class Card:
         self.suit = suit
     def __str__(self):
         return f"{self.value} of {self.suit}"
-
+    def getCard(self, index):
+        if self.value == "J" or self.value == "Q" or self.value == "K":
+            return 10
+        else:
+            return self.value
 
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -25,7 +29,7 @@ class Deck:
         vals = ['2','3','4','5','6','7','8','9','10','J', 'Q', 'K', 'A']
         for suit in suits:
             for val in vals:
-                self.d.append(Card(value,suit))
+                self.d.append(Card(val,suit))
         #shuffles cards after being appended to the end of the deck in order 
         #! maybe we can add randomly from the lists and then pop and pick randomly to speed up games... 
         # TODO!
@@ -38,7 +42,6 @@ class Deck:
             print("deck is empty, adding cards and shuffling")
             self.shuffle()
         else:
-            print("deck is NOT empty, heres your card:")
             return self.d.pop()
 
 #------------------------------------------------------------------
@@ -51,6 +54,9 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
+    def getCard(self, index):
+        if self.hand is not None:
+            return self.hand[index]
     def __str__(self):
         return f"This is {self.name} and they have in their hand: {self.hand}"
     def emptyHand(self):
