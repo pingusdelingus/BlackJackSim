@@ -14,7 +14,7 @@ def calculateHand(Player):
         elif currHand[index] == 'A':
             currHand[index] = 'w'
         else:
-            currHand[index] = currHand[index].getCard(index)
+            currHand[index] = int(currHand[index].getCard(index))
     if 'w' in currHand:
         second = copy.deepcopy(currHand)
         for index in range(len(currHand)):
@@ -48,7 +48,7 @@ def hitPlayer(Player, Deck):
 def hit(Player,Deck):
     res = hitPlayer(Player, Deck)
     if res[0] == "A":
-        userInput = input(f" choose either : {res[1]} or : res{2}, enter either 1 or 2:")
+        userInput = input(f" choose either : {res[1]} or : {res[2]}, enter either 1 or 2:")
         while userInput not in ['1', '2']:
             userInput = input(f" choose either : {res[1]} or : res{2}, enter either 1 or 2:")
         if userInput == '1':
@@ -64,7 +64,7 @@ def hit(Player,Deck):
 def flipDealerCards(Player, Deck, Dealer, dealersum):
     print("no more bets.. flipping dealer cards:")
     print(f"The dealers cards are: {Dealer.showDealerCards()}")
-    while dealersum <= 16:
+    while min(dealersum[1:]) <= 16:
         dealersum = hit(Dealer, Deck)
     return dealersum
 
