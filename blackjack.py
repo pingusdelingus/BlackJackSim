@@ -109,7 +109,7 @@ def compare(dealerSum, playerSum):
 thedeck = Deck()
 thedeck.start()
 def blackjack():
-    validOptions = ['h',  's', 'k', 'q']
+    validOptions = ['h', 's', 'k', 'q', 'x']
     human = Player('human')
     dealer = Player('dealer')
     dealCard(human, thedeck)
