@@ -7,7 +7,7 @@ class Card:
         self.suit = suit
     def __str__(self):
         return f"{self.value} of {self.suit}"
-    def getCard(self, index):
+    def getCardValue(self):
         if self.value == "J" or self.value == "Q" or self.value == "K":
             return 10
         else:
@@ -33,18 +33,26 @@ class Deck:
         #shuffles cards after being appended to the end of the deck in order 
         #! maybe we can add randomly from the lists and then pop and pick randomly to speed up games... 
         # TODO!
+        #
+        #
+        # using built in method to shuffle array, can be improved
         random.shuffle(self.d)
     
 
-
+    # returns a list of 2 items, that are card objects
     def deal_blackjack(self):
         if len(self.d) == 0:
             print("deck is empty, adding cards and shuffling")
             self.shuffle()
         else:
             return self.d.pop()
-
+    def deal_poker_player(self)
+        if len(self.d ==0):
+            print("empty deck, adding cards and shuffling")
+            self.shuffle()
+        return [self.d.pop(), self.d.pop()]
 #------------------------------------------------------------------
+    # toString for deck of cards
     def __str__(self):
         return f"This is a deck with {len(self.d)} cards currently!"
 

@@ -29,8 +29,13 @@ class Deck:
         self.numCardsIn = 0
         self.d = []
         self.start()
+    def isEmpty(self):
+        if self.d is None or len(self.d) == 0:
+            return True
+        else:
+            return False
     def deal(self):
-        if len(self.d) == 0:
+        if len(self.d) == 0 or 1:
             self.start()
         else:
             return self.d.pop()
@@ -43,6 +48,7 @@ class Deck:
                 self.d.append(Card(val,suit))
         random.shuffle(self.d)
         self.numCardsIn = len(self.d)
+        return
     def __str__(self):
         return f"Deck with {self.numCardsIn} cards left"
     def uglyprint(self):
