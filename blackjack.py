@@ -1,134 +1,174 @@
-from playingcard import *
-import copy
-
-faceCards = ['J', 'Q', 'K']
-validOptions = ['X', 'x', 'H', 'h', 'K', 'k', 'S', 's']
-
-
-#returns a list of the total sums of the cards in a players hand, either dealer or players
-def calculateHand(Player):
-    currHand = Player.hand
-    for index in range(len(currHand)):
-        if currHand[index] in faceCards:
-            currHand[index] = 10
-        elif currHand[index] == 'A':
-            currHand[index] = 'w'
+import random
+from colorama import Fore, Style
+from colorama import init
+init(autoreset=True)
+from pc import *
+numLoss = 0
+numWins = 0
+#black jack functions
+# take in a player object,  and evaluate their hand (sum) and returns it
+def evaluateHandBJ(Player ):
+    h = Player.hand
+    checkAce = 0
+    sum = 0
+    for card in h:
+        if card is None:
+            print("Error hand contains a NONE card.")
+            return 0
+        if card.getBJValue() == 11:
+            checkAce += 1
         else:
-            currHand[index] = int(currHand[index].getCard(index))
-    if 'w' in currHand:
-        second = copy.deepcopy(currHand)
-        for index in range(len(currHand)):
-            if currHand[index] == 'w':
-                currHand[index] = 1
-                second[index] = 11
-        return ['A', sum(second), sum(currHand)]
+            sum += card.getBJValue()
+    if checkAce == 0:
+        return sum 
     else:
-        return ['56', sum(currHand)]
+        while(checkAce != 0):
+            if checkAce < -10 or checkAce > 10:
+                print('error in evaluateHandBJ')
+                return
+            if sum + 11 <= 21:
+                print('counting ace as 11')
+                sum = sum + 11
+            elif sum + 11 > 21 and sum + 1 <= 21:
+                print('counting ace as 1')
+                sum = sum + 1
+            checkAce -=1 
+        return sum
+    print('how tf did this code execute')
+
+def showHandValue(Player):
+    val = evaluateHandBJ(Player)
+    cards =""
+    for c in Player.hand:
+        cards += f"{c.shortprint()}, "
+
+    print(f"{Player.name} has a hand: {cards} with value {Fore.RED}{val}")
 
 
-#--------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------
+# deal to person
+def dealCard(person, Deck):
+    person.hand.append(Deck.deal())
 
-def hitPlayer(Player, Deck):
-    nextCard = Deck.deal_blackjack()
-    Player.hand.append(nextCard)
-    newTotal = calculateHand(Player)
-    if newTotal[0] == 56:
-        return newTotal[1]
-    else:
-        if newTotal[1] > 21 and newTotal[2] <= 21:
-            return newTotal[2]
-        if newTotal[1] <= 21 and newTotal[2] > 21:
-            return newTotal[1]
-        if newTotal[1] <= 21 and newTotal[2] <= 21:
-            return ['A', newTotal[1], newTotal[2]]
-    print("error in hitplayer method")
-    return -1
-#--------------------------------------------------------------------------------------------
-def hit(Player,Deck):
-    res = hitPlayer(Player, Deck)
-    if res[0] == "A":
-        userInput = input(f" choose either : {res[1]} or : {res[2]}, enter either 1 or 2:")
-        while userInput not in ['1', '2']:
-            userInput = input(f" choose either : {res[1]} or : res{2}, enter either 1 or 2:")
-        if userInput == '1':
-            res = res[1]
-        else:
-            res = res[2]
-    else:
-        res = res[0]
-    return res
-
-
-
-def flipDealerCards(Player, Deck, Dealer, dealersum):
-    print("no more bets.. flipping dealer cards:")
-    print(f"The dealers cards are: {Dealer.showDealerCards()}")
-    while min(dealersum[1:]) <= 16:
-        dealersum = hit(Dealer, Deck)
-    return dealersum
-
-     
-#--------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------
-
-def main():
-    ourDeck = Deck()
-#checking constructor and making sure that toString works!
-    print(ourDeck)
-
-    print("Welcome to 1-Handed BlackJack")
-    ourDealer = Player("Dealer") 
-    ourPlayer = Player("Human")
+def firstDeal(Player, Dealer, Deck):
     for index in range(2):
-        ourDealer.hand.append(ourDeck.deal_blackjack()) 
-        ourPlayer.hand.append(ourDeck.deal_blackjack())
-    dealerSum = calculateHand(ourDealer)
-    playerSum = calculateHand(ourPlayer)
+        dealCard(Player, Deck)
+        dealCard(Dealer, Deck)
 
 
 
+def flipDealerCards(Player, Deck, Dealer):
+    dealerValue = evaluateHandBJ(Dealer)
+    showHandValue(Dealer)
+    if dealerValue >= 17:
+        print('dealer stands, comparing hands')
+    while(dealerValue < 17):
+        if dealerValue > 21:
+            print('dealer busts')
+        dealCard(Dealer, Deck)
+        dealerValue = evaluateHandBJ(Dealer)
+        showHandValue(Dealer)
 
+def compare(dealerSum, playerSum):
+    if playerSum > 21:
+        print(f"{Fore.RED} Player busts with {playerSum} {Style.RESET_ALL}")
+        #numLoss +=1
+    elif dealerSum > 21:
+        print(f" {Fore.GREEN} Player wins with {playerSum} {Style.RESET_ALL}")
+        #numWins +=1 
+    elif dealerSum == playerSum:
+        print(f"Tie: Player and dealer both have {playerSum}")
+    elif dealerSum > playerSum:
+        print(f"{Fore.RED} Dealer wins with {dealerSum} against player's {playerSum} {Style.RESET_ALL}")
+        #numLoss +=1
+    else:
+        print(f"{Fore.GREEN} Player wins with {playerSum} against dealer's {dealerSum} {Style.RESET_ALL}")
+        #numWins += 1
+    #if playerSum > 21 and dealerSum <= 21:
+    #    print(f"player busts with {playerSum}")
+    #    exit
+    #if dealerSum > 21 and playerSum <= 21:
+    #    print(f"player wins with {playerSum}")
+    #    exit
+    #if dealerSum == 21 and playerSum == 21:
+    #    print(f"tie both with {playerSum}")
+    #    exit
+    #if dealerSum < 21 and playerSum < 21 and dealerSum > playerSum:
+    #    print(f"dealer wins with {dealerSum} againt human's {playerSum}")
+    #    exit
 
-    # GAME LOOP
-    while len(ourDeck.d) != 0 and min(playerSum[1:]) <= 21 and min(dealerSum[1:]) <= 21:
-        
-        print(f"{ourPlayer} and your total is {playerSum[1:]}")
-        print(f"The dealer is showing a {ourDealer.hand[0]}")
+    #if dealerSum < 21 and playerSum < 21 and playerSum > dealerSum:
+    #    print(f"player wins with {playerSum} against the dealer's {dealerSum}")
+    #    exit
+
+    #if dealerSum < 21 and playerSum < 21 and playerSum == dealerSum:
+    #    print(f"player and dealer tie with {playerSum}")
+    #    exit
+    #else:
+    #    print('error in comapre method')
+
+thedeck = Deck()
+thedeck.start()
+def blackjack():
+    validOptions = ['h',  's', 'k', 'q']
+    human = Player('human')
+    dealer = Player('dealer')
+    dealCard(human, thedeck)
+    dealCard(dealer, thedeck)
+    dealCard(human, thedeck)
+    dealCard(dealer, thedeck)
+    showHandValue(human)
+    playerSum = evaluateHandBJ(human)
+    dealersum = evaluateHandBJ(dealer)
+
+    while playerSum <= 21:
+        print(f"The dealer is showing a {dealer.hand[0]}")
         usrInput = input("What would you like to do? (H)it |  (S)tand | (K)Surrender | or e(X)it:")
-
-
-
-        while usrInput not in validOptions:
+        while usrInput.lower() not in validOptions:
             usrInput = input("What would you like to do? (H)it |  (S)tand | (K)Surrender | or e(X)it:")
-                    
+            
         if usrInput.upper() == "H":
-            playerSum = hit(ourPlayer, ourDeck)
+            dealCard(human, thedeck)
+            showHandValue(human)
         elif usrInput.upper() == "S":
-            dealersum = flipDealerCards(ourPlayer, ourDeck, ourDealer, dealerSum)
+            showHandValue(dealer)
+            dealersum = evaluateHandBJ(dealer)
+            while dealersum < 16:
+                dealCard(dealer, thedeck)
+                showHandValue(dealer)
+                dealersum = evaluateHandBJ(dealer)
+            compare(dealersum,playerSum)
+            break
+        elif usrInput.upper() =="X":
+            print('goodbye')
+            exit()
         elif usrInput.upper() == "K":
             print("Surrendering hand")
             ourDealer.emptyHand()
             ourPlayer.emptyHand()
-        
+        elif usrInput.upper() == 'Q' or usrInput.upper() == 'X':
+            print("game ending... goodbye!")
+            exit()
 
-        if playerSum > 21:
-            print("Player busts! better luck next time...")
-            print("Dealing again..")
-            ourDealer.emptyHand()
-            ourPlayer.emptyHand()
-        if dealerSum > 21:
-            print("Dealer busts! YOU WIN!")
-            print("Dealing again..")
-            ourDealer.emptyHand()
-            ourPlayer.emptyHand()
+        playerSum = evaluateHandBJ(human)
+        dealersum = evaluateHandBJ(dealer) 
+    if playerSum > 21:
+        print(f"{Fore.RED} player busts with {playerSum}")
 
 
-
+def main():
+    valid = ['Y', 'N']
+    while not thedeck.isEmpty():
+        print('Dealing new cards...')
+        print('-' * 100)
+        blackjack()
+    usrInput = input("Would you like to play again? (Y/N)")
+    while usrInput.upper() not in valid:
+        usrInput = input("Would you like to play again? (Y/N)")
+    if usrInput.upper() == 'Y':
+        thedeck.start()
+        main()
+    else:
+        exit()
 main()
-     
-
-
-
 
 

@@ -1,5 +1,8 @@
 import random
 import copy
+
+
+
 class Card:
     def __init__(self,value, suit):
         self.value = value
@@ -23,19 +26,28 @@ class Card:
     def getSuit(self):
         return self.suit
     
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.hand = []
+
 
 class Deck:
     def __init__(self):
         self.numCardsIn = 0
         self.d = []
         self.start()
+
+
     def isEmpty(self):
         if self.d is None or len(self.d) == 0:
             return True
         else:
             return False
+
+
     def deal(self):
-        if len(self.d) == 0 or 1:
+        if self.isEmpty():
             self.start()
         else:
             return self.d.pop()
