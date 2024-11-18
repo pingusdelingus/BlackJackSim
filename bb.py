@@ -3,8 +3,6 @@ from colorama import Fore, Style
 from colorama import init
 init(autoreset=True)
 from pc import *
-numLoss = 0
-numWins = 0
 #black jack functions
 # take in a player object,  and evaluate their hand (sum) and returns it
 def evaluateHandBJ(Player ):
@@ -70,24 +68,15 @@ def flipDealerCards(Player, Deck, Dealer):
 
 def compare(dealerSum, playerSum):
     if playerSum > 21:
-        print(f"{Fore.RED} Player busts with {playerSum} {Style.RESET_ALL}")
-        numLoss +=1
-        #numLoss +=1
+            print(f"{Fore.RED} Player busts with {playerSum} {Style.RESET_ALL}")
     elif dealerSum > 21:
         print(f" {Fore.GREEN} Player wins with {playerSum} {Style.RESET_ALL}")
-        numWins += 1
-        #numWins +=1 
     elif dealerSum == playerSum:
         print(f"Tie: Player and dealer both have {playerSum}")
-
     elif dealerSum > playerSum:
         print(f"{Fore.RED} Dealer wins with {dealerSum} against player's {playerSum} {Style.RESET_ALL}")
-        numLoss +=1
-        #numLoss +=1
     else:
         print(f"{Fore.GREEN} Player wins with {playerSum} against dealer's {dealerSum} {Style.RESET_ALL}")
-        numWins +=1 
-        #numWins += 1
     #if playerSum > 21 and dealerSum <= 21:
     #    print(f"player busts with {playerSum}")
     #    exit
@@ -114,7 +103,7 @@ def compare(dealerSum, playerSum):
 thedeck = Deck()
 thedeck.start()
 def blackjack():
-    validOptions = ['h', 's', 'k', 'q', 'x']
+    validOptions = ['h',  's', 'k', 'q']
     human = Player('human')
     dealer = Player('dealer')
     dealCard(human, thedeck)
@@ -150,27 +139,20 @@ def blackjack():
             print("Surrendering hand")
             ourDealer.emptyHand()
             ourPlayer.emptyHand()
-            numLoss +=1
-            return
         elif usrInput.upper() == 'Q' or usrInput.upper() == 'X':
             print("game ending... goodbye!")
-            return
+            exit()
+
         playerSum = evaluateHandBJ(human)
         dealersum = evaluateHandBJ(dealer) 
     if playerSum > 21:
         print(f"{Fore.RED} player busts with {playerSum}")
-        numLoss +=1
-         
-
-
-numWins = 0
-numLoss = 0
 def main():
     valid = ['Y', 'N']
     while not thedeck.isEmpty():
         print('Dealing new cards...')
         print('-' * 100)
-        blackjack(numWins, numLoss)
+        blackjack()
     usrInput = input("Would you like to play again? (Y/N)")
     while usrInput.upper() not in valid:
         usrInput = input("Would you like to play again? (Y/N)")
@@ -180,5 +162,3 @@ def main():
     else:
         exit()
 main()
-
-
