@@ -1,10 +1,10 @@
+numLoss = 0
+numWins = 0
 import random
 from colorama import Fore, Style
 from colorama import init
 init(autoreset=True)
 from pc import *
-numLoss = 0
-numWins = 0
 #black jack functions
 # take in a player object,  and evaluate their hand (sum) and returns it
 def evaluateHandBJ(Player ):
@@ -69,6 +69,7 @@ def flipDealerCards(Player, Deck, Dealer):
         showHandValue(Dealer)
 
 def compare(dealerSum, playerSum):
+    global numLoss, numWins
     if playerSum > 21:
         print(f"{Fore.RED} Player busts with {playerSum} {Style.RESET_ALL}")
         numLoss +=1
@@ -114,6 +115,7 @@ def compare(dealerSum, playerSum):
 thedeck = Deck()
 thedeck.start()
 def blackjack():
+    global numLoss, numWins
     validOptions = ['h', 's', 'k', 'q', 'x']
     human = Player('human')
     dealer = Player('dealer')
@@ -170,7 +172,7 @@ def main():
     while not thedeck.isEmpty():
         print('Dealing new cards...')
         print('-' * 100)
-        blackjack(numWins, numLoss)
+        blackjack( )
     usrInput = input("Would you like to play again? (Y/N)")
     while usrInput.upper() not in valid:
         usrInput = input("Would you like to play again? (Y/N)")
