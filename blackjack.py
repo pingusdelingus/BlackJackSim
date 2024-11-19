@@ -5,6 +5,8 @@ from colorama import Fore, Style
 from colorama import init
 init(autoreset=True)
 from pc import *
+def dealCard(person, Deck):
+    person.hand.append(Deck.deal())
 #black jack functions
 # take in a player object,  and evaluate their hand (sum) and returns it
 def evaluateHandBJ(Player ):
@@ -46,13 +48,11 @@ def showHandValue(Player):
 
 
 # deal to person
-def dealCard(person, Deck):
-    person.hand.append(Deck.deal())
 
 def firstDeal(Player, Dealer, Deck):
     for index in range(2):
-        dealCard(Player, Deck)
-        dealCard(Dealer, Deck)
+        checkShuffle(Player, Deck)
+        checkShuffle(Dealer, Deck)
 
 
 
@@ -64,7 +64,7 @@ def flipDealerCards(Player, Deck, Dealer):
     while(dealerValue < 17):
         if dealerValue > 21:
             print('dealer busts')
-        dealCard(Dealer, Deck)
+        checkShuffle(Dealer, Deck)
         dealerValue = evaluateHandBJ(Dealer)
         showHandValue(Dealer)
 
@@ -111,6 +111,16 @@ def compare(dealerSum, playerSum):
     #    exit
     #else:
     #    print('error in comapre method')
+def checkShuffle(player, deck):
+
+    if len(thedeck.d) > 0:
+        dealCard(player, deck)
+    else:
+        print("deck out of cards! shuffling now")
+        deck.start()
+        dealCard(player,deck)
+
+
 
 thedeck = Deck()
 thedeck.start()
@@ -119,10 +129,10 @@ def blackjack():
     validOptions = ['h', 's', 'k', 'q', 'x']
     human = Player('human')
     dealer = Player('dealer')
-    dealCard(human, thedeck)
-    dealCard(dealer, thedeck)
-    dealCard(human, thedeck)
-    dealCard(dealer, thedeck)
+    checkShuffle(human, thedeck)
+    checkShuffle(dealer, thedeck)
+    checkShuffle(human, thedeck)
+    checkShuffle(dealer, thedeck)
     showHandValue(human)
     playerSum = evaluateHandBJ(human)
     dealersum = evaluateHandBJ(dealer)
@@ -134,13 +144,13 @@ def blackjack():
             usrInput = input("What would you like to do? (H)it |  (S)tand | (K)Surrender | or e(X)it:")
             
         if usrInput.upper() == "H":
-            dealCard(human, thedeck)
+            checkShuffle(human, thedeck)
             showHandValue(human)
         elif usrInput.upper() == "S":
             showHandValue(dealer)
             dealersum = evaluateHandBJ(dealer)
             while dealersum < 16:
-                dealCard(dealer, thedeck)
+                checkShuffle(dealer, thedeck)
                 showHandValue(dealer)
                 dealersum = evaluateHandBJ(dealer)
             compare(dealersum,playerSum)

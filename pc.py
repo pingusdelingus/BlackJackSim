@@ -47,9 +47,10 @@ class Deck:
 
 
     def deal(self):
-        if self.isEmpty():
+        if self.isEmpty() or self.numCardsIn == 0:
             self.start()
         else:
+            self.numCardsIn -= 1
             return self.d.pop()
     def start(self):
         self.d.clear()
@@ -60,7 +61,6 @@ class Deck:
                 self.d.append(Card(val,suit))
         random.shuffle(self.d)
         self.numCardsIn = len(self.d)
-        return
     def __str__(self):
         return f"Deck with {self.numCardsIn} cards left"
     def uglyprint(self):
@@ -105,5 +105,27 @@ class Deck:
                     print(c.shortprint(), end = " ")
                 print()
 
+class TwoDeck(Deck):
+    def __init__(self):
+        self.d = []
+        self.numCardsIn = 0
+        start()
+    
+
+
+    def start(self):
+
+        self.d.clear()
+        suits = ['Clubs', 'Hearts', 'Diamonds', 'Spades']
+        vals = ['2','3','4','5','6','7','8','9','10','J', 'Q', 'K', 'A']
+        for suit in suits:
+            for val in vals:
+                self.d.append(Card(val,suit))
+        random.shuffle(self.d)
+        secondDeck = copy.deepcopy(self.d)
+        random.shuffle(secondDeck)
+        self.d = self.d + secondDeck
+        self.numCardsIn = len(self.d) 
+        return
 
 
