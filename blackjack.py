@@ -40,7 +40,7 @@ def evaluateHandBJ(Player ):
 
 def showHandValue(Player):
     val = evaluateHandBJ(Player)
-    cards =""
+    cards = ""
     for c in Player.hand:
         cards += f"{c.shortprint()}, "
 

@@ -52,6 +52,8 @@ class Deck:
         else:
             self.numCardsIn -= 1
             return self.d.pop()
+    
+    
     def start(self):
         self.d.clear()
         suits = ['Clubs', 'Hearts', 'Diamonds', 'Spades']
