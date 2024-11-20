@@ -54,6 +54,7 @@ def showHandValue(Player: Player):
 
 # deal to person
 def dealCard(person: Player, Deck: Deck):
+    #! reshuffles deck if its empty
     if Deck.isEmpty():
         Deck.start()
     
@@ -140,11 +141,11 @@ def blackjack():
 numWins = 0
 numLoss = 0
 def main():
-    for _ in range(100000):
+    for _ in range(1000000):
     
         blackjack()
         
-    print(f"{(numWins / 100000) * 100}% win rate")
+    print(f"{(numWins / 10000)  }% win rate")
         
 
 main()

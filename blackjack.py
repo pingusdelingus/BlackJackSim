@@ -177,6 +177,9 @@ def blackjack():
 
 numWins = 0
 numLoss = 0
+numTie = 0
+
+chips = 1000
 def main():
     valid = ['Y', 'N']
     while not thedeck.isEmpty():
