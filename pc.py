@@ -30,7 +30,10 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
-
+    def printHand(self):
+        ret = [c.shortprint() for c in self.hand]
+        for c in self.hand:
+            print(f"player {self.name} has {ret}")
 
 class Deck:
     def __init__(self):
