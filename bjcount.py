@@ -102,9 +102,9 @@ hi = [10,11,1]
 zero = [7,8,9]
 lo = [2,3,4,5,6]
 
-def getCount(cards, currCount):
-    global hi, zero, lo
-    newCount = currCount
+def getCount(cards):
+    global hi, zero, lo, count
+    newCount = count
     for c in cards:
         if c.getBJValue() in hi:
             newCount -= 1
@@ -135,13 +135,11 @@ def blackjack():
     print(f"dealer shows: {dealer.hand[0]}")
     showing = list(human.hand)
     showing += [dealer.hand[0]]
-    count = getCount(showing, count)
+    count = getCount(showing)
     print(f"the count is: {count}")
     while playerSum <= 21:
 
-        if playerSum > 21:
-            numLoss +=1
-            break
+        
         #@======================================================================================
         #~ PLAYER V0
         #~ STANDS IF SUM IS GREATER THAN 14
@@ -156,7 +154,7 @@ def blackjack():
             dealCard(human, thedeck)
             showHandValue(human)
             showing = [human.hand[-1]]
-            count = getCount(showing, count)
+            count += getCount(showing)
             print(f"the count is: {count}")
         elif usrInput.upper() == "S":
             showHandValue(dealer)
@@ -166,7 +164,8 @@ def blackjack():
                 showHandValue(dealer)
                 dealersum = evaluateHandBJ(dealer)
             showing = list(dealer.hand[1:-1])
-            updatedCount = getCount(showing, count)
+            count += getCount(showing)
+            print(f"the dealer has {dealer.printHand()}")
             print(f"the count is: {count}")
             compare(dealersum,playerSum)
             break
@@ -174,7 +173,9 @@ def blackjack():
             return
         playerSum = evaluateHandBJ(human)
         dealersum = evaluateHandBJ(dealer) 
-         
+    if playerSum > 21:
+        numLoss +=1
+            
 
 
 numWins = 0
