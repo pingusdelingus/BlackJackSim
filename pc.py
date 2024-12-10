@@ -117,6 +117,7 @@ class TwoDeckWithPen(Deck):
         
         self.pen = 1.0 - float(pen)
         self.d = []
+        self.percentFull = 1
         self.start()
     def deal(self):
         if self.percentFull >= self.pen:
@@ -133,20 +134,5 @@ class TwoDeckWithPen(Deck):
         
 
 
-    def start(self):
-
-        self.d.clear()
-        suits = ['Clubs', 'Hearts', 'Diamonds', 'Spades']
-        vals = ['2','3','4','5','6','7','8','9','10','J', 'Q', 'K', 'A']
-        for suit in suits:
-            for val in vals:
-                self.d.append(Card(val,suit))
-        random.shuffle(self.d)
-        secondDeck = copy.deepcopy(self.d)
-        random.shuffle(secondDeck)
-        self.d = self.d + secondDeck
-        self.numCardsIn = 52
-        self.percentFull = 1
-        return
-
+   
 

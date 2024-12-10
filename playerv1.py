@@ -67,24 +67,14 @@ def showHandValue(Player: Player):
 # deal to person
 def dealCard(person: Player, Deck: Deck):
     #! reshuffles deck if its empty
+    global count
     if Deck.isEmpty():
         Deck.start()
-        #cardCount = 0
+        count = 0
     
     return person.hand.append(Deck.deal())
 
 
-def firstDeal(Player: Player, Dealer: Player, Deck: Deck):
-    global count
-    for _ in range(2):
-        dealCard(Player, Deck)
-        if checkForShuffle(Player):
-            count = 0
-            count = updateCount(Player,count)
-        dealCard(Dealer, Deck)
-        if checkForShuffle(Dealer):
-            count = 0
-            count = updateCount(Dealer,count)
 
 
 def flipDealerCards(Deck: Deck, Dealer: Player):
@@ -95,9 +85,11 @@ def flipDealerCards(Deck: Deck, Dealer: Player):
     while(dealerValue < 17):
         if dealerValue > 21:
             print('dealer busts')
-        dealCard(Dealer, Deck)
-        dealerValue = evaluateHandBJ(Dealer)
-        showHandValue(Dealer)
+        x = dealCard(Dealer, thedeck)
+        if checkForShuffle(Dealer):
+            fixMinusOne(Dealer)
+            count = 0
+            count = updateCountOneCard(x,count)
 
 # compare the hands of the dealer and player
 def compare(dealerSum, playerSum):
@@ -107,22 +99,28 @@ def compare(dealerSum, playerSum):
     if playerSum > 21:
         print(f"{Fore.RED} Player busts with {playerSum} {Style.RESET_ALL}")
         numLoss +=1
+        return "l"
+        
         #numLoss +=1
     elif dealerSum > 21:
         print(f" {Fore.GREEN} Player wins with {playerSum} {Style.RESET_ALL}")
         numWins += 1
+        return 'w'
         #numWins +=1 
     elif dealerSum == playerSum:
         print(f"Tie: Player and dealer both have {playerSum}")
         numTie += 1
+        return 'd'
 
     elif dealerSum > playerSum:
         print(f"{Fore.RED} Dealer wins with {dealerSum} against player's {playerSum} {Style.RESET_ALL}")
         numLoss +=1
+        return 'l'
         #numLoss +=1
     else:
         print(f"{Fore.GREEN} Player wins with {playerSum} against dealer's {dealerSum} {Style.RESET_ALL}")
         numWins +=1 
+        return 'w'
 
 def updateCount(player, count):
     global lo
@@ -138,6 +136,7 @@ def updateCount(player, count):
 
 def fixMinusOne(player):
     if -1 in player.hand:
+        print(f"player.hand is {player.hand}")
         player.hand = [x for x in player.hand if x != -1]
         return
     else:
@@ -145,6 +144,7 @@ def fixMinusOne(player):
     
 def checkForShuffle(player):
     if -1 in player.hand:
+        print(f"player.hand is {player.hand}")
         #player.hand = [x for x in player.hand if x != -1]
         return True
     else:
@@ -165,7 +165,7 @@ def updateCountOneCard(card,count):
         
         
 count = 0
-thedeck = Deck()
+thedeck = TwoDeckWithPen(0.6)
 thedeck.start()
 def blackjack():
     zeroes = [7,8,9]
@@ -294,8 +294,8 @@ def blackjack():
         
         
         if usrInput.upper() == "H":
-            dealCard(human, thedeck)
-            x = dealCard(dealer, thedeck)
+            
+            x = dealCard(human, thedeck)
             if checkForShuffle(human):
                 fixMinusOne(human)
                 count = 0
@@ -310,7 +310,7 @@ def blackjack():
             print(f"the current count is {count}")
             dealersum = evaluateHandBJ(dealer)
             while dealersum < 16:
-                dealCard(dealer, thedeck)
+                
                 x = dealCard(dealer, thedeck)
                 if checkForShuffle(dealer):
                     fixMinusOne(dealer)
@@ -333,14 +333,19 @@ def blackjack():
 numWins = 0
 numLoss = 0
 numTie = 0
+
+
+numTrials = 100
 def main():
-    for _ in range(100):
+    for _ in range(numTrials):
     
         blackjack()
         
-    print(f"{(numWins / (numLoss + numWins + numTie) )  }% win rate")
+    print(f"{(numWins / (numLoss + numWins + numTie) )  :.5f} win rate")
         
 
 main()
 
 
+
+    
