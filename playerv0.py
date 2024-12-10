@@ -81,19 +81,25 @@ def flipDealerCards(Deck: Deck, Dealer: Player):
 
 # compare the hands of the dealer and player
 def compare(dealerSum, playerSum):
-    global numLoss, numWins
+    global numLoss, numWins, numDraw
     if playerSum > 21:
+        print('loss')
         numLoss +=1
     elif dealerSum > 21:
         numWins += 1
+        print('win')
+    elif dealerSum == playerSum:
+        numDraw += 1
+        print('draw')
     elif dealerSum > playerSum:
+        print('loss')
         numLoss += 1
     else:
+        print('win')
         numWins += 1
 
 
-thedeck = Deck()
-thedeck.start()
+thedeck = TwoDeckWithPen(0.6)
 def blackjack():
     global numLoss, numWins
     human = Player('human')
@@ -134,18 +140,20 @@ def blackjack():
         playerSum = evaluateHandBJ(human)
         dealersum = evaluateHandBJ(dealer) 
     if playerSum > 21:
+        print('loss')
         numLoss +=1
          
 
 
 numWins = 0
 numLoss = 0
+numDraw = 0
 def main():
-    for _ in range(1000000):
+    for _ in range(1000):
     
         blackjack()
         
-    print(f"{(numWins / 10000)  }% win rate")
+    print(f"{(numWins / (numWins + numLoss))  }% win rate")
         
 
 main()

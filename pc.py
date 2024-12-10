@@ -110,12 +110,27 @@ class Deck:
                     print(c.shortprint(), end = " ")
                 print()
 
-class TwoDeck(Deck):
-    def __init__(self):
+
+
+class TwoDeckWithPen(Deck):
+    def __init__(self, pen):
+        
+        self.pen = 1.0 - float(pen)
         self.d = []
-        self.numCardsIn = 0
-        start()
-    
+        self.start()
+    def deal(self):
+        if self.percentFull >= self.pen:
+            self.numCardsIn -= 1
+            self.percentFull = float(self.numCardsIn / 52)
+            return self.d.pop()
+        else:
+            print("reached RED CARD, shuffling")
+            self.start()
+            self.numCardsIn -= 1
+            self.percentFull = float(self.numCardsIn / 52)
+            return [self.d.pop(), -1]
+
+        
 
 
     def start(self):
@@ -130,7 +145,8 @@ class TwoDeck(Deck):
         secondDeck = copy.deepcopy(self.d)
         random.shuffle(secondDeck)
         self.d = self.d + secondDeck
-        self.numCardsIn = len(self.d) 
+        self.numCardsIn = 52
+        self.percentFull = 1
         return
 
 

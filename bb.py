@@ -1,3 +1,6 @@
+#file is deprecated, moving to old
+
+
 import random
 from colorama import Fore, Style
 from colorama import init

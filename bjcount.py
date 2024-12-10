@@ -1,6 +1,9 @@
 
 numLoss = 0
 numWins = 0
+hi = [10,11,1]
+zero = [7,8,9]
+lo = [2,3,4,5,6]
 
 from colorama import Fore, Style
 from colorama import init
@@ -49,19 +52,25 @@ def showHandValue(Player: Player):
     for c in Player.hand:
         cards += f"{c.shortprint()}, "
 
-    # print(f"{Player.name} has a hand: {cards} with value {Fore.RED}{val}")
+    print(f"{Player.name} has a hand: {cards} with value {Fore.RED}{val}")
 
 
 # deal to person
 def dealCard(person: Player, Deck: Deck):
-    global count
+    global count, hi, lo, zero
     #! reshuffles deck if its empty
     if Deck.isEmpty():
         print(f"SHUFFLING CARDS")
         Deck.start()
         count = 0
+    x = Deck.deal()
+    person.hand.append(x)
+    if x.getBJValue() in hi:
+        count -= 1
+    elif x.getBJValue() in lo:
+        count += 1
+    print(f'the count is : {count}')
     
-    person.hand.append(Deck.deal())
 
 
 def firstDeal(Player: Player, Dealer: Player, Deck: Deck):
@@ -98,9 +107,7 @@ def compare(dealerSum, playerSum):
 
 
 
-hi = [10,11,1]
-zero = [7,8,9]
-lo = [2,3,4,5,6]
+
 
 def getCount(cards):
     global hi, zero, lo, count
@@ -129,14 +136,14 @@ def blackjack():
     dealCard(human, thedeck)
     dealCard(dealer, thedeck)
     showHandValue(human)
+    
     playerSum = evaluateHandBJ(human)
     dealersum = evaluateHandBJ(dealer)
-    print(f"player has: {human.printHand()} ")
-    print(f"dealer shows: {dealer.hand[0]}")
-    showing = list(human.hand)
-    showing += [dealer.hand[0]]
-    count = getCount(showing)
-    print(f"the count is: {count}")
+    
+    # showing = list(human.hand)
+    # showing += [dealer.hand[0]]
+    # count = getCount(showing)
+    # print(f"the count is: {count}")
     while playerSum <= 21:
 
         
@@ -153,9 +160,9 @@ def blackjack():
         if usrInput.upper() == "H":
             dealCard(human, thedeck)
             showHandValue(human)
-            showing = [human.hand[-1]]
-            count += getCount(showing)
-            print(f"the count is: {count}")
+            # showing = [human.hand[-1]]
+            # count += getCount(showing)
+            # print(f"the count is: {count}")
         elif usrInput.upper() == "S":
             showHandValue(dealer)
             dealersum = evaluateHandBJ(dealer)
@@ -163,10 +170,10 @@ def blackjack():
                 dealCard(dealer, thedeck)
                 showHandValue(dealer)
                 dealersum = evaluateHandBJ(dealer)
-            showing = list(dealer.hand[1:-1])
-            count += getCount(showing)
-            print(f"the dealer has {dealer.printHand()}")
-            print(f"the count is: {count}")
+            # showing = list(dealer.hand[1:-1])
+            # count += getCount(showing)
+            # print(f"the dealer has {dealer.printHand()}")
+            # print(f"the count is: {count}")
             compare(dealersum,playerSum)
             break
         elif usrInput.upper() == 'Q' or usrInput.upper() == 'X':
