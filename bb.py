@@ -2,9 +2,6 @@
 
 
 import random
-from colorama import Fore, Style
-from colorama import init
-init(autoreset=True)
 from pc import *
 #black jack functions
 # take in a player object,  and evaluate their hand (sum) and returns it

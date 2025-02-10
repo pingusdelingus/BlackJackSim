@@ -55,6 +55,7 @@ def evaluateHandBJ(Player: Player) -> int:
         return sum
 
 
+
 def showHandValue(Player: Player):
     val = evaluateHandBJ(Player)
     cards = ""
@@ -136,8 +137,16 @@ def updateCount(player, count):
 
 def fixMinusOne(player):
     if -1 in player.hand:
+        index = 0
         print(f"player.hand is {player.hand}")
-        player.hand = [x for x in player.hand if x != -1]
+        #player.hand = [x for x in player.hand if x != -1]
+        for i in range(len(player.hand)):
+            if player.hand[i] == -1:
+                index = i
+        player.hand.remove(index)
+
+
+
         return
     else:
         print("wtf how is this triggering")
