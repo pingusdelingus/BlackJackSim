@@ -117,9 +117,11 @@ class TwoDeckWithPen(Deck):
         
         self.pen = float(pen)
         self.d = []
-        self.percentFull = 1
+        self.percentFull = 1.0
         self.start()
 
+
+    @Override
     def start():
         self.d.clear()
         list2 = []
@@ -134,18 +136,19 @@ class TwoDeckWithPen(Deck):
         
         self.d = self.d + list2
         self.numCardsIn = len(self.d)
+        self.percentFull = 1.0
         return
-
+    @Override
     def deal(self):
         if self.percentFull >= self.pen:
             self.numCardsIn -= 1
-            self.percentFull = float(self.numCardsIn / 52)
+            self.percentFull = float(self.numCardsIn / len(self.d))
             return self.d.pop()
         else:
             print("reached RED CARD, shuffling")
             self.start()
             self.numCardsIn -= 1
-            self.percentFull = float(self.numCardsIn / 52)
+            self.percentFull = float(self.numCardsIn / len(self.d))
             return self.d.pop()
 
         
